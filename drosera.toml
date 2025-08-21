@@ -7,7 +7,7 @@ drosera_address = "0x91cB447BaFc6e0EA0F4Fe056F5a9b1F14bb06e5D"
 
 [traps.mytrap]
 path = "out/BalanceDropTrap.sol/BalanceDropTrap.json"
-response_contract = "0x5DED69fB3443d091DB3f7F635b805646D0057e99"
+response_contract = "0x80ab55dE5555D4C02122b9d7370385d9e6996c75"
 response_function = "response(bool,bytes)"
 cooldown_period_blocks = 33
 min_number_of_operators = 1

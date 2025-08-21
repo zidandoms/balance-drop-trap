@@ -22,27 +22,27 @@ contract BalanceDropTrap is ITrap {
         if (data.length < 2) {
             return (false, abi.encode("Insufficient data points"));
         }
-        
-        (uint256 previousBalance, uint256 previousBlock) = abi.decode(data[0], (uint256, uint256));
-        (uint256 currentBalance, uint256 currentBlock) = abi.decode(data[1], (uint256, uint256));
-        
-        if (currentBlock != previousBlock + 1) {
+
+        (uint256 currentBalance, uint256 currentBlock) = abi.decode(data[0], (uint256, uint256));
+        (uint256 previousBalance, uint256 previousBlock) = abi.decode(data[1], (uint256, uint256));
+
+        if (previousBlock != currentBlock - 1) {
             return (false, abi.encode("Data not from consecutive blocks"));
         }
-        
+
         if (previousBalance == 0) {
             return (false, abi.encode("No previous balance to compare"));
         }
-        
-        if (currentBalance >= previousBalance) {
+
+        uint256 drop = currentBalance < previousBalance ? previousBalance - currentBalance : 0;
+
+        if (drop == 0) {
             return (false, abi.encode("No balance drop detected"));
         }
-        
-        uint256 drop = previousBalance - currentBalance;
+
         uint256 dropPercentage = (drop * BASIS_POINTS) / previousBalance;
-        
         bool shouldTrigger = dropPercentage >= (DROP_THRESHOLD * BASIS_POINTS / 100);
-        
+
         if (shouldTrigger) {
             bytes memory responseData = abi.encode(
                 "ALERT: Sudden balance drop detected!",
